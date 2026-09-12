@@ -1,5 +1,5 @@
 BASE: ['']
-TOOLBOX_MODE: "train_and_test"      # "train_and_test"  or "only_test"
+TOOLBOX_MODE: "only_test"      # "train_and_test"  or "only_test"
 
 TRAIN:
   BATCH_SIZE: 180
@@ -12,8 +12,8 @@ TRAIN:
     DATASET: BP4DPlusBigSmall
     DO_PREPROCESS: False              # if first time, should be true
     DATA_FORMAT: NDCHW
-    DATA_PATH:  "/gscratch/ubicomp/xliu0/data3/mnt/Datasets/BP4DPlus/RawData" 
-    CACHED_PATH: "/gscratch/ubicomp/xliu0/data3/mnt/Datasets/rppg_toolbox/PreprocessedData"  # Processed dataset save path, need to be updated
+    DATA_PATH:  "./data/BP4DPlus/RawData"
+    CACHED_PATH: "./data/BP4DPlus/PreprocessedData"
     EXP_DATA_NAME: "BigSmall_BP4DPlus_Big144_Small9_ChunkLen3_AUSubset_rPPGToolbox"
     FOLD:
       FOLD_NAME: 'Fold1_Train'
@@ -46,8 +46,8 @@ VALID:
     DATASET: BP4DPlusBigSmall
     DO_PREPROCESS: False              # if first time, should be true
     DATA_FORMAT: NDCHW
-    DATA_PATH:  "/gscratch/ubicomp/xliu0/data3/mnt/Datasets/BP4DPlus/RawData"
-    CACHED_PATH: "/gscratch/ubicomp/xliu0/data3/mnt/Datasets/rppg_toolbox/PreprocessedData"  # Processed dataset save path, need to be updated
+    DATA_PATH:  "./data/BP4DPlus/RawData"
+    CACHED_PATH: "./data/BP4DPlus/PreprocessedData"
     EXP_DATA_NAME: "BigSmall_BP4DPlus_Big144_Small9_ChunkLen3_AUSubset_rPPGToolbox"
     FOLD:
       FOLD_NAME: 'Fold1_Test'
@@ -82,8 +82,8 @@ TEST:
     DATASET: BP4DPlusBigSmall
     DO_PREPROCESS: False              # if first time, should be true
     DATA_FORMAT: NDCHW
-    DATA_PATH:  "/gscratch/ubicomp/xliu0/data3/mnt/Datasets/BP4DPlus/RawData" 
-    CACHED_PATH: "/gscratch/ubicomp/xliu0/data3/mnt/Datasets/rppg_toolbox/PreprocessedData"  # Processed dataset save path, need to be updated
+    DATA_PATH:  "./data/BP4DPlus/RawData"
+    CACHED_PATH: "./data/BP4DPlus/PreprocessedData"
     EXP_DATA_NAME: "BigSmall_BP4DPlus_Big144_Small9_ChunkLen3_AUSubset_rPPGToolbox"
     FOLD:
       FOLD_NAME: 'Fold1_Test'
@@ -111,7 +111,7 @@ TEST:
           SMALL_W: 9
 
 DEVICE: cuda:0
-NUM_OF_GPU_TRAIN: 2
+NUM_OF_GPU_TRAIN: 1
 
 LOG:
   PATH: runs/exp
@@ -122,6 +122,6 @@ MODEL:
     FRAME_DEPTH: 3
 
 INFERENCE:
-  BATCH_SIZE: 180
+  BATCH_SIZE: 32
   EVALUATION_METHOD: "FFT"        # "FFT" or "peak detection"
-  MODEL_PATH: ""
+  MODEL_PATH: "./final_model_release/BP4D_BigSmall_Multitask_Fold1.pth"

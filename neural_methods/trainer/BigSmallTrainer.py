@@ -79,10 +79,26 @@ class BigSmallTrainer(BaseTrainer):
         new_state_dict = OrderedDict()
 
         for k, v in old_state_dict.items():
-            name = k[7:] # remove `module.`
+            name = k[7:] if k.startswith('module.') else k
             new_state_dict[name] = v
         
         return new_state_dict
+
+
+    def load_model_state(self, model_path):
+        """Load checkpoints saved by either single-GPU or DataParallel runs."""
+        state_dict = torch.load(model_path, map_location=self.device)
+        model_uses_data_parallel = next(iter(self.model.state_dict())).startswith('module.')
+        checkpoint_uses_data_parallel = next(iter(state_dict)).startswith('module.')
+
+        if checkpoint_uses_data_parallel and not model_uses_data_parallel:
+            state_dict = self.remove_data_parallel(state_dict)
+        elif model_uses_data_parallel and not checkpoint_uses_data_parallel:
+            state_dict = OrderedDict(
+                (f'module.{name}', value) for name, value in state_dict.items()
+            )
+
+        self.model.load_state_dict(state_dict)
 
 
     def save_model(self, index):
@@ -394,7 +410,7 @@ class BigSmallTrainer(BaseTrainer):
         print('')
             
         # LOAD ABOVED SPECIFIED MODEL FOR TESTING
-        self.model.load_state_dict(torch.load(model_path))
+        self.load_model_state(model_path)
         self.model = self.model.to(self.device)
         self.model.eval()
 
